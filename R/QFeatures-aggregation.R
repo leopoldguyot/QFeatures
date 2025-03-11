@@ -466,3 +466,184 @@ validAdjacencyMatrix <- function(x) {
         stop("colSums() == 0 detected: proteins must be identified by at least one peptide.")
     TRUE
 }
+##' Aggregate Samples from a Qfeatures
+##'
+##' @param object An instance of class [QFeatures] or [SummarizedExperiment].
+##'
+##' @param i A `numeric()` or `character()` indicating the index or name
+##'     of one or multiple assays that will be aggregated
+##'     to create one or multiple new assays.
+##'
+##' @param fcol A `character(1)` naming a coldata variable (of assay
+##'     `i` in case of a `QFeatures`) defining how to aggregate the
+##'     samples of the assays. This variable is either a `character`
+##'     or a (possibly sparse) matrix. See below for details.
+##'
+##' @param name A `character()` naming the new assays.
+##'     `name` must have the same length as i.
+##'     Default is `newAssay`. Note that the function will fail if there's
+##'     already an assay with `name`.
+##'
+##' @param fun A function used for quantitative sample
+##'     aggregation. See Details for examples.
+##'
+##' @param ... Additional parameters passed the `fun`.
+##'
+##' @return A `QFeatures` object with an additional assay or a
+##'  `SummarizedExperiment` object (or subclass thereof).
+##'
+##' @importFrom methods as
+##' @exportMethod aggregateSamples
+##' @rdname QFeatures-aggregate
+setMethod("aggregateSamples", "QFeatures",
+    function(object, i, fcol, name = "newAssay",
+       fun = MatrixGenerics::rowMeans, ...) {
+        if (isEmpty(object))
+            return(object)
+        ## Check arguments
+        if (any(present <- name %in% names(object)))
+            stop("There's already one or more assays named: '",
+                paste0(name[present], collapse = "', '"), "'.")
+        i <- .normIndex(object, i)
+        if (length(i) != length(name)) stop("'i' and 'name' must have same length")
+        if (length(fcol) == 1) fcol <- rep(fcol, length(i))
+        if (length(i) != length(fcol)) stop("'i' and 'fcol' must have same length")
+        for (j in seq_along(i)) {
+                  from <- i[[j]]
+                  to <- name[[j]]
+                  by <- fcol[[j]]
+                  ## Create the aggregated assay
+                  aggAssay <- .aggregateColumns(getWithColData(object, from),
+                                                  by, fun, ...)
+                  ## Add the assay to the QFeatures object
+                  # Cause problem when adding multiple assays
+                  # since the samples' names will be the same
+                  object <- addAssay(object, aggAssay, name = to) 
+        }
+        object
+       })
+
+
+##' @exportMethod aggregateSamples
+##' @importFrom MatrixGenerics rowMeans
+##' @rdname QFeatures-aggregate
+setMethod("aggregateSamples", "SummarizedExperiment",
+          function(object, fcol, fun = MatrixGenerics::rowMeans, ...)
+              .aggregateColumns(object, fcol, fun, ...))
+
+.aggregateColumns <- function(object, fcol, fun, ...) {
+    .makePeptideProteinVector <- function(m, collapse = ";") {
+        stopifnot(inherits(m, "Matrix"))
+        vec <- rep(NA_character_, nrow(m))
+        for (i in seq_len(nrow(m)))
+            vec[i] <- paste(names(which(m[i, ] != 0)), collapse = collapse)
+        names(vec) <- rownames(m)
+        vec
+    }
+    if (missing(fcol))
+        stop("'fcol' is required.")
+    m <- assay(object, 1)
+    cd <- colData(object)
+    if (!fcol %in% names(cd))
+        stop("'fcol' not found in the assay's colData.")
+    groupBy <- cd[[fcol]]
+
+    ## Store class of assay i in case it is not a SummarizedExperiment
+    ## so that the aggregated assay can be reverted to that class
+    .class <- class(object)
+
+    ## Message about NA values is quant/row data
+    has_na <- character()
+    if (anyNA(m))
+        has_na <- c(has_na, "quantitative")
+    if (anyNA(cd, recursive = TRUE))
+        has_na <- c(has_na, "col")
+    if (length(has_na)) {
+        msg <- paste(paste("Your", paste(has_na, collapse = " and "),
+                           " data contain missing values."),
+                     "Please read the relevant section(s) in the",
+                     "aggregateSamples manual page regarding the",
+                     "effects of missing values on data aggregation.")
+        message(paste(strwrap(msg), collapse = "\n"))
+    }
+    if (is.vector(groupBy) && !is.list(groupBy)) { ## atomic vectors
+        aggregated_assay <- aggregate_columns_by_vector(m, groupBy, fun, ...)
+        aggcount_assay <- aggregate_columns_by_vector(m, groupBy, rowCounts)
+        aggregated_coldata <- QFeatures::reduceDataFrame(cd, cd[[fcol]],
+                                                         simplify = TRUE,
+                                                         drop = TRUE,
+                                                         count = TRUE)<
+        assays <- SimpleList(assay = aggregated_assay, aggcounts = aggcount_assay)
+        coldata <- aggregated_coldata[colnames(aggregated_assay), , drop = FALSE]
+    } else if (is(groupBy, "Matrix")) {
+        aggregated_assay <- aggregate_columns_by_matrix(m, groupBy, fun, ...)
+        ## Remove the adjacency matrix that should be dropped anyway
+        cd[[fcol]] <- NULL
+        ## Temp variable for unfolding and reducing - removed later
+        rd[["._vec_"]] <- .makePeptideProteinVector(groupBy)
+        rd <- unfoldDataFrame(rd, "._vec_")
+        aggregated_coldata <- reduceDataFrame(rd, rd[["._vec_"]], drop = TRUE)
+        aggregated_coldata[["._vec_"]] <- NULL
+        ## Count the number of samples per conditions
+        .n <- apply(groupBy != 0, 2, sum)
+        aggregated_coldata[[".n"]] <- .n[rownames(aggregated_coldata)]
+
+        assays <- SimpleList(assay = as.matrix(aggregated_assay)) ## to discuss
+        coldata <- aggregated_coldata[rownames(aggregated_assay), , drop = FALSE]
+    } else stop("'fcol' must refer to an atomic vector or a sparse matrix.")
+    print(dim(coldata))
+    print(dim(assays))
+    se <- SummarizedExperiment(assays = assays,
+                               colData = coldata,
+                               rowData = rowData(object))
+
+    ## If the input objects weren't SummarizedExperiments, then try to
+    ## convert the merged assay into that class. If the conversion
+    ## fails, keep the SummarizedExperiment, otherwise use the
+    ## converted object (see issue #78).
+    if (.class != "SummarizedExperiment")
+        se <- tryCatch(as(se, .class),
+                       error = function(e) se)
+    return(se)
+}
+aggregate_columns_by_vector <- function (x, INDEX, FUN, ...) 
+{
+    if (!(is.matrix(x) | inherits(x, "HDF5Matrix"))) 
+        stop("'x' must be a matrix or an object that inherits from ", 
+            "'HDF5Matrix'.")
+    if (!identical(length(INDEX), ncol(x))) 
+        stop("The length of 'INDEX' has to be identical to 'ncol(x).")
+    FUN <- match.fun(FUN)
+    res <- lapply(split(seq_len(ncol(x)), INDEX), FUN = function(i) FUN(x[, i 
+        , drop = FALSE], ...))
+    nms <- names(res)
+    res <- do.call(cbind, res)
+    colnames(res) <- nms
+    rownames(res) <- rownames(x)
+    if (inherits(x, "HDF5Matrix"))
+        res <- HDF5Array::writeHDF5Array(res, filepath = HDF5Array::path(x), 
+            with.dimnames = TRUE)
+    res
+}
+
+aggregate_columns_by_matrix <- function (x, MAT, FUN, ...) 
+{
+    if (!(is.matrix(x) | inherits(x, "HDF5Matrix"))) 
+        stop("'x' must be a matrix or an object that inherits from ", 
+            "'HDF5Matrix'.")
+    if (!is(MAT, "Matrix") && !is(MAT, "matrix")) 
+        stop("'MAT' must be a matrix.")
+    if (!identical(ncol(MAT), ncol(x))) 
+        stop("nrow(MAT) must be identical to 'nrow(x).")
+    res <- do.call(FUN, list(x, MAT, ...))
+    if (!is.null(colnames(MAT)) && !identical(colnames(MAT), 
+        colnames(res))) 
+        stop("The colum names of 'MAT' have to be identical to the colnames of 'res'!")
+    if (!is.null(colnames(x)) && !identical(colnames(x), colnames(res))) 
+        stop("The column names of 'x' have to be identical to the column names of 'res'!")
+    rownames(res) <- rownames(x)
+    if (inherits(x, "HDF5Matrix")) 
+        res <- HDF5Array::writeHDF5Array(res, filepath = HDF5Array::path(x), 
+            with.dimnames = TRUE)
+    res
+}

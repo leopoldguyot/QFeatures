@@ -10,6 +10,8 @@
 \alias{adjacencyMatrix,QFeatures-method}
 \alias{aggregateFeatures,SummarizedExperiment-method}
 \alias{adjacencyMatrix<-}
+\alias{aggregateSamples,QFeatures-method}
+\alias{aggregateSamples,SummarizedExperiment-method}
 \title{Aggregate assays' quantitative features}
 \usage{
 \S4method{aggregateFeatures}{QFeatures}(
@@ -27,20 +29,22 @@
 
 adjacencyMatrix(object, i, adjName = "adjacencyMatrix") <- value
 
+\S4method{aggregateSamples}{QFeatures}(object, i, fcol, name = "newAssay", fun = median, ...)
+
+\S4method{aggregateSamples}{SummarizedExperiment}(object, fcol, fun = MatrixGenerics::rowMeans, ...)
+
 \S4method{aggcounts}{SummarizedExperiment}(object, ...)
 }
 \arguments{
-\item{object}{An instance of class \code{SummarizedExperiment} or
-\code{QFeatures}.}
+\item{object}{An instance of class \link{QFeatures} or \link{SummarizedExperiment}.}
 
-\item{i}{When adding an adjacency matrix to an assay of a
-\code{QFeatures} object, the index or name of the assay the
-adjacency matrix will be added to. Ignored when \code{x} is an
-\code{SummarizedExperiment}.}
+\item{i}{A \code{numeric()} or \code{character()} indicating the index or name
+of one or multiple assays that will be aggregated
+to create one or multiple new assays.}
 
-\item{fcol}{A \code{character(1)} naming a rowdata variable (of assay
+\item{fcol}{A \code{character(1)} naming a coldata variable (of assay
 \code{i} in case of a \code{QFeatures}) defining how to aggregate the
-features of the assays. This variable is either a \code{character}
+samples of the assays. This variable is either a \code{character}
 or a (possibly sparse) matrix. See below for details.}
 
 \item{name}{A \code{character()} naming the new assays.
@@ -48,7 +52,7 @@ or a (possibly sparse) matrix. See below for details.}
 Default is \code{newAssay}. Note that the function will fail if there's
 already an assay with \code{name}.}
 
-\item{fun}{A function used for quantitative feature
+\item{fun}{A function used for quantitative sample
 aggregation. See Details for examples.}
 
 \item{...}{Additional parameters passed the \code{fun}.}
@@ -62,6 +66,9 @@ matrix (class \code{dgCMatrix}) as defined in the \code{Matrix} package,
 as generaled by the \code{\link[=sparseMatrix]{sparseMatrix()}} constructor.}
 }
 \value{
+A \code{QFeatures} object with an additional assay or a
+\code{SummarizedExperiment} object (or subclass thereof).
+
 A \code{QFeatures} object with an additional assay or a
 \code{SummarizedExperiment} object (or subclass thereof).
 }
