@@ -572,7 +572,7 @@ setMethod("aggregateSamples", "SummarizedExperiment",
         aggregated_coldata <- QFeatures::reduceDataFrame(cd, cd[[fcol]],
                                                          simplify = TRUE,
                                                          drop = TRUE,
-                                                         count = TRUE)<
+                                                         count = TRUE)
         assays <- SimpleList(assay = aggregated_assay, aggcounts = aggcount_assay)
         coldata <- aggregated_coldata[colnames(aggregated_assay), , drop = FALSE]
     } else if (is(groupBy, "Matrix")) {
