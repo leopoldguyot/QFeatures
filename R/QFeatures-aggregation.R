@@ -270,7 +270,8 @@ setMethod("aggregateFeatures", "QFeatures",
               if (length(fcol) == 1) fcol <- rep(fcol, length(i))
               if (length(i) != length(fcol)) stop("'i' and 'fcol' must have same length")
 
-              el <- experiments(object)[i]
+              el <- experiments(object)
+              el <- as.list(el)[i]
               rowDataColsKept <- colnames(rowData(el[[i[1]]]))
               ## Aggregate each assay
               for (j in seq_along(i)) {
