@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">QFeatures</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.19.3</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.19.4</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -26,7 +26,7 @@
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json"></form></li>
-<li class="nav-item"><a class="external-link nav-link" href="https://github.com/RforMassSpectrometry/QFeatures/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
+<li class="nav-item"><a class="external-link nav-link" href="https://github.com/rformassspectrometry/QFeatures/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
       </ul></div>
 
 
@@ -42,8 +42,7 @@
 
       <div class="section-desc"><p>The QFeatures class</p></div>
 
-
-    </div><div class="section level2">
+      <dl></dl></div><div class="section level2">
 
 
 
@@ -54,31 +53,43 @@
 
         </dt>
         <dd>Quantitative MS QFeatures</dd>
-      </dl><dl><dt>
+
+        <dt>
 
           <code><a href="QFeatures-longForm.html">longForm(<i>&lt;QFeatures&gt;</i>)</a></code> <code><a href="QFeatures-longForm.html">longForm(<i>&lt;SummarizedExperiment&gt;</i>)</a></code>
 
         </dt>
         <dd>Reshape into a long data format</dd>
-      </dl><dl><dt>
+
+        <dt>
 
           <code><a href="joinAssays.html">joinAssays()</a></code>
 
         </dt>
         <dd>Join assays in a QFeatures object</dd>
-      </dl><dl><dt>
+
+        <dt>
 
           <code><a href="AssayLinks.html">show(<i>&lt;AssayLink&gt;</i>)</a></code> <code><a href="AssayLinks.html">updateObject(<i>&lt;AssayLinks&gt;</i>)</a></code> <code><a href="AssayLinks.html">updateObject(<i>&lt;AssayLink&gt;</i>)</a></code> <code><a href="AssayLinks.html">AssayLink()</a></code> <code><a href="AssayLinks.html">AssayLinks()</a></code> <code><a href="AssayLinks.html">assayLink()</a></code> <code><a href="AssayLinks.html">assayLinks()</a></code> <code><a href="AssayLinks.html">`[`(<i>&lt;AssayLink&gt;</i>,<i>&lt;character&gt;</i>,<i>&lt;ANY&gt;</i>,<i>&lt;ANY&gt;</i>)</a></code> <code><a href="AssayLinks.html">`[`(<i>&lt;AssayLinks&gt;</i>,<i>&lt;list&gt;</i>,<i>&lt;ANY&gt;</i>,<i>&lt;ANY&gt;</i>)</a></code> <code><a href="AssayLinks.html">addAssayLink()</a></code> <code><a href="AssayLinks.html">addAssayLinkOneToOne()</a></code>
 
         </dt>
         <dd>Links between Assays</dd>
-      </dl><dl><dt>
+
+        <dt>
 
           <code><a href="countUniqueFeatures.html">countUniqueFeatures()</a></code>
 
         </dt>
         <dd>Count Unique Features</dd>
-      </dl><dl><dt>
+
+        <dt>
+
+          <code><a href="createPrecursorId.html">createPrecursorId()</a></code>
+
+        </dt>
+        <dd>Create precursor identfiers</dd>
+
+        <dt>
 
           <code><a href="display.html">display()</a></code>
 
@@ -89,8 +100,7 @@
 
       <div class="section-desc"><p>Create QFeatures and SummarizedExperiment object</p></div>
 
-
-    </div><div class="section level2">
+      <dl></dl></div><div class="section level2">
 
 
 
@@ -101,7 +111,8 @@
 
         </dt>
         <dd>QFeatures from tabular data</dd>
-      </dl><dl><dt>
+
+        <dt>
 
           <code><a href="readQFeaturesFromDIANN.html">readQFeaturesFromDIANN()</a></code>
 
@@ -112,8 +123,7 @@
 
       <div class="section-desc"><p>Filtering and handling of missing values</p></div>
 
-
-    </div><div class="section level2">
+      <dl></dl></div><div class="section level2">
 
 
 
@@ -124,7 +134,8 @@
 
         </dt>
         <dd>Managing missing data</dd>
-      </dl><dl><dt>
+
+        <dt>
 
           <code><a href="impute.html">impute</a></code> <code><a href="impute.html">impute(<i>&lt;SummarizedExperiment&gt;</i>)</a></code> <code><a href="impute.html">impute(<i>&lt;QFeatures&gt;</i>)</a></code>
 
@@ -135,8 +146,7 @@
 
       <div class="section-desc"><p>Quantitative data processing</p></div>
 
-
-    </div><div class="section level2">
+      <dl></dl></div><div class="section level2">
 
 
 
@@ -152,8 +162,7 @@
 
       <div class="section-desc"><p>Feature aggregations</p></div>
 
-
-    </div><div class="section level2">
+      <dl></dl></div><div class="section level2">
 
 
 
@@ -169,19 +178,19 @@
 
       <div class="section-desc"><p>Feature filtering</p></div>
 
-
-    </div><div class="section level2">
+      <dl></dl></div><div class="section level2">
 
 
 
 
       <dl><dt>
 
-          <code><a href="QFeatures-filtering.html">VariableFilter()</a></code> <code><a href="QFeatures-filtering.html">filterFeatures(<i>&lt;QFeatures&gt;</i>,<i>&lt;AnnotationFilter&gt;</i>)</a></code> <code><a href="QFeatures-filtering.html">filterFeatures(<i>&lt;QFeatures&gt;</i>,<i>&lt;formula&gt;</i>)</a></code>
+          <code><a href="QFeatures-filtering.html">VariableFilter()</a></code> <code><a href="QFeatures-filtering.html">filterFeatures(<i>&lt;QFeatures&gt;</i>,<i>&lt;AnnotationFilter&gt;</i>)</a></code> <code><a href="QFeatures-filtering.html">filterFeatures(<i>&lt;QFeatures&gt;</i>,<i>&lt;formula&gt;</i>)</a></code> <code><a href="QFeatures-filtering.html">isDuplicated()</a></code>
 
         </dt>
         <dd>Filter features based on their rowData</dd>
-      </dl><dl><dt>
+
+        <dt>
 
           <code><a href="QFeatures-subsetBy.html">subsetByFeature</a></code> <code><a href="QFeatures-subsetBy.html">subsetByFeature,QFeatures,character-method</a></code>
 
@@ -192,8 +201,7 @@
 
       <div class="section-desc"><p>Example data</p></div>
 
-
-    </div><div class="section level2">
+      <dl></dl></div><div class="section level2">
 
 
 
@@ -204,13 +212,22 @@
 
         </dt>
         <dd>Feature example data</dd>
-      </dl><dl><dt>
+
+        <dt>
 
           <code><a href="feat3.html">feat3</a></code>
 
         </dt>
         <dd>Example <code>QFeatures</code> object after processing</dd>
-      </dl><dl><dt>
+
+        <dt>
+
+          <code><a href="feat4.html">feat4</a></code>
+
+        </dt>
+        <dd>Example <code>QFeatures</code></dd>
+
+        <dt>
 
           <code><a href="hlpsms.html">hlpsms</a></code>
 
@@ -221,8 +238,7 @@
 
       <div class="section-desc"><p>DataFrame functions</p></div>
 
-
-    </div><div class="section level2">
+      <dl></dl></div><div class="section level2">
 
 
 
@@ -233,7 +249,8 @@
 
         </dt>
         <dd>Reduces and expands a <code>DataFrame</code></dd>
-      </dl><dl><dt>
+
+        <dt>
 
           <code><a href="unfoldDataFrame.html">unfoldDataFrame()</a></code>
 
@@ -244,8 +261,7 @@
 
       <div class="section-desc"><p>Package generics</p></div>
 
-
-    </div><div class="section level2">
+      <dl></dl></div><div class="section level2">
 
 
 
