@@ -55,7 +55,9 @@ isDuplicated(x)
 
 - filter:
 
-  Either an instance of class AnnotationFilter or a formula.
+  Either an instance of class
+  [AnnotationFilter::AnnotationFilter](https://rdrr.io/pkg/AnnotationFilter/man/AnnotationFilter.html)
+  or a formula.
 
 - i:
 
@@ -110,7 +112,8 @@ assay is desired, you may want to use `x[i, , ]` instead (see the
 
 ## Variable filters
 
-The variable filters are filters as defined in the AnnotationFilter
+The variable filters are filters as defined in the
+[AnnotationFilter::AnnotationFilter](https://rdrr.io/pkg/AnnotationFilter/man/AnnotationFilter.html)
 package. In addition to the pre-defined filter, users can arbitrarily
 set a field on which to operate. These arbitrary filters operate either
 on a character variables (as `CharacterVariableFilter` objects) or
@@ -123,8 +126,8 @@ with the `VariableFilter` constructor.
   used to filter features) as input, and return a logical of the same
   length, with elements set to `TRUE` for unique occurence, and `FALSE`
   otherwise. This function is different from
-  [`duplicated()`](https://rdrr.io/r/base/duplicated.html), as here even
-  the first occurence is set to `FALSE`. See
+  [`BiocGenerics::duplicated()`](https://rdrr.io/pkg/BiocGenerics/man/duplicated.html),
+  as here even the first occurence is set to `FALSE`. See
   [`createPrecursorId()`](https://rformassspectrometry.github.io/QFeatures/reference/createPrecursorId.md)
   for an application.
 
@@ -176,7 +179,7 @@ example(aggregateFeatures)
 #> 
 #> aggrgF> ## Aggregate PSMs into peptides
 #> aggrgF> feat1 <- aggregateFeatures(feat1, "psms", "Sequence", name = "peptides")
-#> Aggregated: 1/1
+#>   |                                                                              |                                                                      |   0%  |                                                                              |======================================================================| 100%
 #> 
 #> aggrgF> feat1
 #> An instance of class QFeatures (type: bulk) with 2 sets:
@@ -186,7 +189,7 @@ example(aggregateFeatures)
 #> 
 #> aggrgF> ## Aggregate peptides into proteins
 #> aggrgF> feat1 <- aggregateFeatures(feat1, "peptides", "Protein", name = "proteins")
-#> Aggregated: 1/1
+#>   |                                                                              |                                                                      |   0%  |                                                                              |======================================================================| 100%
 #> 
 #> aggrgF> feat1
 #> An instance of class QFeatures (type: bulk) with 3 sets:
@@ -258,10 +261,14 @@ example(aggregateFeatures)
 #> 
 #> aggrgF> ## By default, missing values are propagated
 #> aggrgF> ft2 <- aggregateFeatures(ft_na, 1, fcol = "X", fun = colSums)
+#>   |                                                                              |                                                                      |   0%  |                                                                              |======================================================================| 100%
+#> The following messages occurred during aggregation:
+#> 
 #> Your quantitative data contain missing values. Please read the relevant
 #> section(s) in the aggregateFeatures manual page regarding the effects
 #> of missing values on data aggregation.
-#> Aggregated: 1/1
+#> 
+#> Occurred during the aggregation of set(s): na
 #> 
 #> aggrgF> assay(ft2[[2]])
 #>    A  B  C
@@ -284,10 +291,14 @@ example(aggregateFeatures)
 #> 
 #> aggrgF> ## Ignored when setting na.rm = TRUE
 #> aggrgF> ft3 <- aggregateFeatures(ft_na, 1, fcol = "X", fun = colSums, na.rm = TRUE)
+#>   |                                                                              |                                                                      |   0%  |                                                                              |======================================================================| 100%
+#> The following messages occurred during aggregation:
+#> 
 #> Your quantitative data contain missing values. Please read the relevant
 #> section(s) in the aggregateFeatures manual page regarding the effects
 #> of missing values on data aggregation.
-#> Aggregated: 1/1
+#> 
+#> Occurred during the aggregation of set(s): na
 #> 
 #> aggrgF> assay(ft3[[2]])
 #>   A  B  C
@@ -324,10 +335,14 @@ example(aggregateFeatures)
 #> d         2           B
 #> 
 #> aggrgF> ft3 <- aggregateFeatures(ft_na, 1, fcol = "X", fun = colSums)
+#>   |                                                                              |                                                                      |   0%  |                                                                              |======================================================================| 100%
+#> The following messages occurred during aggregation:
+#> 
 #> Your quantitative and row data contain missing values. Please read the
 #> relevant section(s) in the aggregateFeatures manual page regarding the
 #> effects of missing values on data aggregation.
-#> Aggregated: 1/1
+#> 
+#> Occurred during the aggregation of set(s): na
 #> 
 #> aggrgF> ## The Y feature variable has been dropped!
 #> aggrgF> assay(ft3[[2]])
@@ -411,7 +426,7 @@ example(aggregateFeatures)
 #> 
 #> aggrgF> ft <- aggregateFeatures(ft, "peps", "adjacencyMatrix", name = "protsByMat",
 #> aggrgF+                         fun = MsCoreUtils::colMeansMat)
-#> Aggregated: 1/1
+#>   |                                                                              |                                                                      |   0%  |                                                                              |======================================================================| 100%
 #> 
 #> aggrgF> assay(ft[[2]])
 #>         S1    S2

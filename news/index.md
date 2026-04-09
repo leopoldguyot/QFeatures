@@ -1,5 +1,33 @@
 # Changelog
 
+## QFeatures 1.21
+
+### QFeatures 1.21.2
+
+- Add support for dimethyl multiplexing to
+  [`readQFeaturesFromDIANN()`](https://rformassspectrometry.github.io/QFeatures/reference/readQFeaturesFromDIANN.md)
+  (see PR
+  [\#249](https://github.com/rformassspectrometry/QFeatures/issues/249)),
+  contributed by Karolína Kryštofová.
+- Aggregate redundant messages in
+  [`aggregateFeatures()`](https://rformassspectrometry.github.io/QFeatures/reference/QFeatures-aggregate.md)
+  (PR
+  [\#255](https://github.com/rformassspectrometry/QFeatures/issues/255)).
+- Add a progress bar to
+  [`aggregateFeatures()`](https://rformassspectrometry.github.io/QFeatures/reference/QFeatures-aggregate.md)
+  and
+  [`readQFeatures()`](https://rformassspectrometry.github.io/QFeatures/reference/readQFeatures.md)
+  (PR
+  [\#255](https://github.com/rformassspectrometry/QFeatures/issues/255)).
+
+### QFeatures 1.21.1
+
+- Link to RforMS contribution guide.
+
+### QFeatures 1.21.0
+
+- New devel version
+
 ## QFeatures 1.19
 
 ### QFeatures 1.19.4
@@ -106,8 +134,7 @@
 ### QFeatures 1.15.1
 
 - Import [`reshape2::melt`](https://rdrr.io/pkg/reshape2/man/melt.html),
-  required for
-  [`MultiAssayExperiment::longFormat()`](https://github.com/waldronlab/MultiAssayExperiment/reference/longFormat-defunct.html).
+  required for `MultiAssayExperiment::longFormat()`.
 
 ### QFeatures 1.15.0
 
