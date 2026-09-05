@@ -174,13 +174,13 @@
 ##'     compatibility. Default is `NULL`. If both `ecol` and `colData`
 ##'     are set, an error is thrown.
 ##'
-##' @param zeroToNA A `logical(1)`. If `TRUE`, zero values in the
+##' @param zeroIsNA A `logical(1)`. If `TRUE`, zero values in the
 ##'     quantitative data are replaced with `NA` before object
 ##'     creation. Default is `FALSE`.
 ##'
 ##' @param logTransform A `logical(1)`. If `TRUE`, a log2
 ##'     transformation is applied to the quantitative data before
-##'     object creation. This is applied after `zeroToNA`. Default is
+##'     object creation. This is applied after `zeroIsNA`. Default is
 ##'     `FALSE`.
 ##'
 ##' @param ... Additional parameters passed to
@@ -274,11 +274,13 @@ NULL
 readSummarizedExperiment <- function(assayData,
                                      quantCols = NULL,
                                      fnames = NULL,
-                                     ecol = NULL, ...,
-                                     zeroToNA = FALSE,
-                                     logTransform = FALSE) {
+                                     ecol = NULL,
+                                     zeroIsNA = FALSE,
+                                     logTransform = FALSE,
+                                     ...
+                                     ) {
     quantCols <- .checkWarnEcol(quantCols, ecol)
-    zeroToNA <- .checkReadTransformationArg(zeroToNA, "zeroToNA")
+    zeroIsNA <- .checkReadTransformationArg(zeroIsNA, "zeroIsNA")
     logTransform <- .checkReadTransformationArg(logTransform, "logTransform")
     if (!is.vector(quantCols) || is.list(quantCols))
         stop("'quantCols' must be an atomics vector.")
@@ -307,7 +309,7 @@ readSummarizedExperiment <- function(assayData,
         quantCols <- which(quantCols)
     }
     assay <- as.matrix(xx[, quantCols, drop = FALSE])
-    if (zeroToNA)
+    if (zeroIsNA)
         assay[!is.na(assay) & assay == 0] <- NA
     if (logTransform)
         assay <- log2(assay)
@@ -341,9 +343,10 @@ readQFeatures <- function(assayData,
                           verbose = TRUE,
                           ecol = NULL,
                           fnames = NULL,
-                          ...,
-                          zeroToNA = FALSE,
-                          logTransform = FALSE) {
+                          zeroIsNA = FALSE,
+                          logTransform = FALSE,
+                          ...
+                          ) {
     if (verbose) message("Checking arguments.")
     assayData <- as.data.frame(assayData)
     if (!is.null(colData))
@@ -353,7 +356,7 @@ readQFeatures <- function(assayData,
     runs <- .checkRunCol(assayData, colData, runCol)
     if (verbose) message("Loading data as a 'SummarizedExperiment' object.")
     se <- readSummarizedExperiment(assayData, quantCols, ...,
-                                   zeroToNA = zeroToNA,
+                                   zeroIsNA = zeroIsNA,
                                    logTransform = logTransform)
     rownames(se) <- make.unique(rownames(se))
     if (length(runs)) {
